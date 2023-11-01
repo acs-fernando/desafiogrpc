@@ -1,0 +1,23 @@
+version: '3'
+services:
+  produto:
+    build: ./produto
+    volumes:
+      - ./produto:/go/src/
+    command: go run ./main.go grpc
+    ports:
+      - "50051:50051"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  cliente:
+    build: ./cliente
+    volumes:
+      - ./cliente:/home/node/app
+    command: npm run start:dev
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - produto
